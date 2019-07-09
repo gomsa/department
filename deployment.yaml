@@ -42,8 +42,6 @@ spec:
             "--server_address=:8080",
           ]
           env:
-            - name: APP_KEY
-              value: "4RpKymtlXbizEQ8rOzHM3YybOrQuLya"
             - name: DB_HOST
               value: "department-mariadb-mariadb"
             - name: DB_USER

@@ -3,13 +3,12 @@ syntax = "proto3";
 package department;
 
 service Departments {
-    // 根据父级 id 获取相关部门
-    rpc BetByParent(Department) returns (Response) {}
-
     // 获取部门列表
     rpc List(ListQuery) returns (Response) {}
     // 根据 唯一 获取部门
     rpc Get(Department) returns (Response) {}
+    // 根据条件查询 返回多条数据
+    rpc Gets(Department) returns (Response) {}
     // 创建部门
     rpc Create(Department) returns (Response) {}
     // 更新部门
