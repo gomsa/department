@@ -43,7 +43,7 @@ spec:
           ]
           env:
             - name: DB_HOST
-              value: "department-mariadb-mariadb"
+              value: "department-mariadb"
             - name: DB_USER
               value: "department"
             - name: DB_NAME
@@ -52,7 +52,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: mariadb-password
-                  name: department-mariadb-mariadb
+                  name: department-mariadb
           ports:
           - containerPort: 8080
             name: micro
