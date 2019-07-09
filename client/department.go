@@ -14,6 +14,6 @@ var (
 )
 
 func init() {
-	userSrvName := os.Getenv("DEPARTMENT_NAME")
-	Department = departmentPB.NewDepartmentsClient(userSrvName, client.DefaultClient)
+	SrvName := os.Getenv("DEPARTMENT_NAME")
+	Department = departmentPB.NewDepartmentsClient(SrvName, client.DefaultClient)
 }
