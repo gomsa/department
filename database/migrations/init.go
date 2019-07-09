@@ -24,7 +24,7 @@ func department() {
 			updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			xxx_unrecognized varbinary(255) DEFAULT NULL,
 			xxx_sizecache int(11) DEFAULT NULL,
-			PRIMARY KEY (id),
+			PRIMARY KEY (id)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		`)
 	}

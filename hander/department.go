@@ -10,7 +10,17 @@ import (
 
 // Department 部门结构
 type Department struct {
-	Repo service.URepository
+	Repo service.Repository
+}
+
+// All 获取所有权限
+func (srv *Department) All(ctx context.Context, req *pb.Department, res *pb.Response) (err error) {
+	departments, err := srv.Repo.All(req)
+	if err != nil {
+		return err
+	}
+	res.Departments = departments
+	return err
 }
 
 // List 获取所有部门
@@ -32,16 +42,6 @@ func (srv *Department) Get(ctx context.Context, req *pb.Department, res *pb.Resp
 		return err
 	}
 	res.Department = department
-	return err
-}
-
-// Gets 根据条件查询 返回多条数据
-func (srv *Department) Gets(ctx context.Context, req *pb.Department, res *pb.Response) (err error) {
-	departments, err := srv.Repo.Gets(req)
-	if err != nil {
-		return err
-	}
-	res.Departments = departments
 	return err
 }
 

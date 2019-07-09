@@ -10,8 +10,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//URepository 仓库接口
-type URepository interface {
+//Repository 仓库接口
+type Repository interface {
+	All(req *pb.Department) ([]*pb.Department, error)
 	Create(department *pb.Department) (*pb.Department, error)
 	Get(department *pb.Department) (*pb.Department, error)
 	List(req *pb.ListQuery) ([]*pb.Department, error)
@@ -23,6 +24,15 @@ type URepository interface {
 // DepartmentRepository 部门仓库
 type DepartmentRepository struct {
 	DB *gorm.DB
+}
+
+// All 获取所有部门信息
+func (repo *DepartmentRepository) All(req *pb.Department) (departments []*pb.Department, err error) {
+	if err := repo.DB.Where(&req).Find(&departments).Error; err != nil {
+		log.Log(err)
+		return nil, err
+	}
+	return departments, nil
 }
 
 // List 获取所有部门信息
@@ -88,12 +98,12 @@ func (repo *DepartmentRepository) Total(req *pb.ListQuery) (total int64, err err
 
 // Get 获取部门信息
 func (repo *DepartmentRepository) Get(department *pb.Department) (*pb.Department, error) {
-	if department.Id != "" {
+	if department.Id != 0 {
 		if err := repo.DB.Model(&department).Where("id = ?", department.Id).Find(&department).Error; err != nil {
 			return nil, err
 		}
 	}
-	if department.Parent != "" {
+	if department.Parent != 0 {
 		if err := repo.DB.Model(&department).Where("parent = ?", department.Parent).Find(&department).Error; err != nil {
 			return nil, err
 		}
@@ -104,26 +114,6 @@ func (repo *DepartmentRepository) Get(department *pb.Department) (*pb.Department
 		}
 	}
 	return department, nil
-}
-
-// Gets 获取部门信息
-func (repo *DepartmentRepository) Gets(department *pb.Department) (departments []*pb.Department, err error) {
-	if department.Id != "" {
-		if err = repo.DB.Model(&department).Where("id = ?", department.Id).Find(&departments).Error; err != nil {
-			return nil, err
-		}
-	}
-	if department.Parent != "" {
-		if err = repo.DB.Model(&department).Where("parent = ?", department.Parent).Find(&departments).Error; err != nil {
-			return nil, err
-		}
-	}
-	if department.Name != "" {
-		if err = repo.DB.Model(&department).Where("name = ?", department.Name).Find(&departments).Error; err != nil {
-			return nil, err
-		}
-	}
-	return departments, err
 }
 
 // Create 创建部门
@@ -139,7 +129,7 @@ func (repo *DepartmentRepository) Create(department *pb.Department) (*pb.Departm
 
 // Update 更新部门
 func (repo *DepartmentRepository) Update(department *pb.Department) (bool, error) {
-	if department.Id == "" {
+	if department.Id == 0 {
 		return false, fmt.Errorf("请传入更新id")
 	}
 	id := &pb.Department{
