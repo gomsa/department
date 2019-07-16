@@ -16,7 +16,6 @@ type Repository interface {
 	Create(department *pb.Department) (*pb.Department, error)
 	Get(department *pb.Department) (*pb.Department, error)
 	List(req *pb.ListQuery) ([]*pb.Department, error)
-	Total(req *pb.ListQuery) (int64, error)
 	Update(department *pb.Department) (bool, error)
 	Delete(department *pb.Department) (bool, error)
 }
@@ -28,7 +27,7 @@ type DepartmentRepository struct {
 
 // All 获取所有部门信息
 func (repo *DepartmentRepository) All(req *pb.Department) (departments []*pb.Department, err error) {
-	if err := repo.DB.Where(&req).Find(&departments).Error; err != nil {
+	if err := repo.DB.Find(&departments).Error; err != nil {
 		log.Log(err)
 		return nil, err
 	}
@@ -38,62 +37,18 @@ func (repo *DepartmentRepository) All(req *pb.Department) (departments []*pb.Dep
 // List 获取所有部门信息
 func (repo *DepartmentRepository) List(req *pb.ListQuery) (departments []*pb.Department, err error) {
 	db := repo.DB
-	// 分页
-	var limit, offset int64
-	if req.Limit > 0 {
-		limit = req.Limit
-	} else {
-		limit = 10
-	}
-	if req.Page > 1 {
-		offset = (req.Page - 1) * limit
-	} else {
-		offset = -1
-	}
-
-	// 排序
-	var sort string
-	if req.Sort != "" {
-		sort = req.Sort
-	} else {
-		sort = "created_at desc"
-	}
 	// 查询条件
 	if req.Id != "" {
-		db = db.Where("id like ?", "%"+req.Id+"%")
+		db = db.Where("id = ?", req.Id)
 	}
 	if req.Parent != "" {
-		db = db.Where("parent like ?", "%"+req.Parent+"%")
+		db = db.Where("parent = ?", req.Parent)
 	}
-	if req.Name != "" {
-		db = db.Where("name like ?", "%"+req.Name+"%")
-	}
-	if err := db.Order(sort).Limit(limit).Offset(offset).Find(&departments).Error; err != nil {
+	if err := db.Find(&departments).Error; err != nil {
 		log.Log(err)
 		return nil, err
 	}
 	return departments, nil
-}
-
-// Total 获取所有部门查询总量
-func (repo *DepartmentRepository) Total(req *pb.ListQuery) (total int64, err error) {
-	departments := []pb.Department{}
-	db := repo.DB
-	// 查询条件
-	if req.Id != "" {
-		db = db.Where("id like ?", "%"+req.Id+"%")
-	}
-	if req.Parent != "" {
-		db = db.Where("parent like ?", "%"+req.Parent+"%")
-	}
-	if req.Name != "" {
-		db = db.Where("name like ?", "%"+req.Name+"%")
-	}
-	if err := db.Find(&departments).Count(&total).Error; err != nil {
-		log.Log(err)
-		return total, err
-	}
-	return total, nil
 }
 
 // Get 获取部门信息

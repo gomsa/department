@@ -26,11 +26,9 @@ func (srv *Department) All(ctx context.Context, req *pb.Department, res *pb.Resp
 // List 获取所有部门
 func (srv *Department) List(ctx context.Context, req *pb.ListQuery, res *pb.Response) (err error) {
 	departments, err := srv.Repo.List(req)
-	total, err := srv.Repo.Total(req)
 	if err != nil {
 		return err
 	}
-	res.Total = total
 	res.Departments = departments
 	return err
 }

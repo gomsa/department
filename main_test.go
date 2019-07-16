@@ -23,7 +23,7 @@ func TestDepartmentCreate(t *testing.T) {
 	}
 	res := &departmentPB.Response{}
 	err := h.Create(context.TODO(), req, res)
-	fmt.Println(req, res, err)
+	// fmt.Println(req, res, err)
 	t.Log(req, res, err)
 }
 
@@ -31,14 +31,13 @@ func TestDepartmentAll(t *testing.T) {
 	repo := &service.DepartmentRepository{db.DB}
 	h := hander.Department{repo}
 	req := &departmentPB.Department{
-		Parent: 1,
+		Parent: 0,
 	}
 	res := &departmentPB.Response{}
 	err := h.All(context.TODO(), req, res)
-	fmt.Println(req, res, err)
+	fmt.Println(res, err)
 	t.Log(req, res, err)
 }
-
 
 func TestDepartmentDelete(t *testing.T) {
 	repo := &service.DepartmentRepository{db.DB}
