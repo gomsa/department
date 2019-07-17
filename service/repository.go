@@ -38,12 +38,10 @@ func (repo *DepartmentRepository) All(req *pb.Department) (departments []*pb.Dep
 func (repo *DepartmentRepository) List(req *pb.ListQuery) (departments []*pb.Department, err error) {
 	db := repo.DB
 	// 查询条件
-	if req.Id != "" {
+	if req.Id != 0 {
 		db = db.Where("id = ?", req.Id)
 	}
-	if req.Parent != "" {
-		db = db.Where("parent = ?", req.Parent)
-	}
+	db = db.Where("parent = ?", req.Parent)
 	if err := db.Find(&departments).Error; err != nil {
 		log.Log(err)
 		return nil, err
