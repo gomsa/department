@@ -18,7 +18,7 @@ func TestDepartmentCreate(t *testing.T) {
 	repo := &service.DepartmentRepository{db.DB}
 	h := hander.Department{repo}
 	req := &departmentPB.Department{
-		Id:   103,
+		Id:   101,
 		Name: "三楼",
 	}
 	res := &departmentPB.Response{}
@@ -30,11 +30,11 @@ func TestDepartmentCreate(t *testing.T) {
 func TestDepartmentAll(t *testing.T) {
 	repo := &service.DepartmentRepository{db.DB}
 	h := hander.Department{repo}
-	req := &departmentPB.Department{
+	req := &departmentPB.ListQuery{
 		Parent: 0,
 	}
 	res := &departmentPB.Response{}
-	err := h.All(context.TODO(), req, res)
+	err := h.List(context.TODO(), req, res)
 	fmt.Println(res, err)
 	t.Log(req, res, err)
 }
